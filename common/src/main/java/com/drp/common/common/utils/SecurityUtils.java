@@ -1,4 +1,4 @@
-package com.drp.common.utils;
+package com.drp.common.common.utils;
 
 import cn.hutool.crypto.SecureUtil;
 

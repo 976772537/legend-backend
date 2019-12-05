@@ -1,6 +1,6 @@
-package com.drp.common.handler;
+package com.drp.common.common.handler;
 
-import com.drp.common.utils.RsHelper;
+import com.drp.common.common.utils.RsHelper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

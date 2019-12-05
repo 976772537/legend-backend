@@ -1,5 +1,6 @@
 package com.drp.sso.sso.domain;
 
+import com.drp.sso.sso.domain.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;

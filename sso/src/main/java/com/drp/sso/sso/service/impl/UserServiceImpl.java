@@ -2,10 +2,10 @@ package com.drp.sso.sso.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import com.drp.common.bean.User;
-import com.drp.common.utils.JwtUtils;
+import com.drp.common.common.bean.User;
+import com.drp.common.common.utils.JwtUtils;
 import com.drp.sso.sso.domain.Role;
-import com.drp.common.bean.RoleType;
+import com.drp.common.common.bean.RoleType;
 import com.drp.sso.sso.domain.UserDetails;
 import com.drp.sso.sso.repository.UserRepository;
 import com.drp.sso.sso.service.UserService;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 
-import static com.drp.common.utils.SecurityUtils.securityHmac;
+import static com.drp.common.common.utils.SecurityUtils.securityHmac;
 
 /**
  * @author dongruipeng

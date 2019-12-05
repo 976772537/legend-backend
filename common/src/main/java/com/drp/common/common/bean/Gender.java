@@ -1,4 +1,4 @@
-package com.drp.common.bean;
+package com.drp.common.common.bean;
 
 /**
  * @author dongruipeng

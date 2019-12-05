@@ -1,6 +1,6 @@
 package com.drp.sso.sso.domain;
 
-import com.drp.common.bean.RoleType;
+import com.drp.common.common.bean.RoleType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;

@@ -10,13 +10,11 @@
     </parent>
     <groupId>com.drp.sso</groupId>
     <artifactId>sso</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>sso</name>
-    <description>Demo project for Spring Boot</description>
 
     <dependencies>
         <dependency>
-            <groupId>com.drp</groupId>
+            <groupId>com.drp.common</groupId>
             <artifactId>common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>

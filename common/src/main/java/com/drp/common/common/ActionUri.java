@@ -1,4 +1,4 @@
-package com.drp.common;
+package com.drp.common.common;
 
 /**
  * @author dongruipeng

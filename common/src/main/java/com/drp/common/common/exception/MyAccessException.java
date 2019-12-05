@@ -1,4 +1,4 @@
-package com.drp.common.exception;
+package com.drp.common.common.exception;
 
 /**
  * @author dongruipeng
