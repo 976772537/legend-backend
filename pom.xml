@@ -15,10 +15,13 @@
     <name>legend-backend</name>
     <description>Demo project for Spring Boot</description>
     <packaging>pom</packaging>
+
     <modules>
         <module>sso</module>
         <module>common</module>
+        <module>shield</module>
     </modules>
+
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -71,6 +74,7 @@
             <artifactId>hutool-all</artifactId>
             <version>4.6.1</version>
         </dependency>
+        <!-- swagger -->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
@@ -81,10 +85,22 @@
             <artifactId>springfox-swagger-ui</artifactId>
             <version>2.9.2</version>
         </dependency>
+        <!-- JWT -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>0.9.0</version>
+        </dependency>
+        <!-- okHttp -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>3.11.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okio</groupId>
+            <artifactId>okio</artifactId>
+            <version>1.14.0</version>
         </dependency>
     </dependencies>
 
