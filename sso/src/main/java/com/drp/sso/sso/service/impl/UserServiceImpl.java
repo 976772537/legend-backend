@@ -3,7 +3,6 @@ package com.drp.sso.sso.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import com.drp.sso.sso.bean.User;
-import com.drp.sso.sso.common.exception.WrongCodeException;
 import com.drp.sso.sso.common.utils.JwtUtils;
 import com.drp.sso.sso.domain.Role;
 import com.drp.sso.sso.domain.RoleType;
@@ -15,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+
+import static com.drp.sso.sso.common.utils.SecurityUtils.securityHmac;
 
 /**
  * @author dongruipeng
@@ -32,21 +33,22 @@ public class UserServiceImpl implements UserService {
         final CopyOptions copyOptions = CopyOptions.create().setIgnoreNullValue(true);
         UserDetails userDetails = new UserDetails();
         BeanUtil.copyProperties(user, userDetails, copyOptions);
-
+        //set roles
         final ArrayList<Role> roles = new ArrayList<>();
         roles.add(new Role(RoleType.normal));
         userDetails.setRoles(roles);
+        //set time
         final long time = System.currentTimeMillis();
         userDetails.setCreateTimeInMs(time);
         userDetails.setUpdateTimeInMs(time);
+        //secure password
+        final String password = securityHmac(user.getPassword());
+        userDetails.setPassword(password);
 
         userDetails = userRepository.save(userDetails);
-
-        if(userDetails == null) {
-            throw new WrongCodeException("userDetails => null");
-        }
-
+        //generate token
         final String token = JwtUtils.generateJwtToken(userDetails.getUsername());
-        return user.setToken(token).resetPassword();
+        user.setHeadImage(userDetails.getHeadImage());
+        return user.resetPassword().setToken(token);
     }
 }

@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
  * @Descrpition monitor log can use this class
  * @date 2019year 12month04day  15:05:08
  */
-public class RsHelper<T> {
+public final class RsHelper<T> {
 
     public static <T> NetworkResult<T> success(T data) {
         return new NetworkResult<T>(data);

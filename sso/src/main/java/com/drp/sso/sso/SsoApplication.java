@@ -8,6 +8,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
+/**
+ *  Sso =>> Authenticated user
+ */
 @SpringBootApplication
 public class SsoApplication {
 

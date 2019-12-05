@@ -32,6 +32,6 @@ public class UserController {
     @ApiOperation(value = "register")
     @PostMapping(ActionUri.SAVE)
     public Callable<NetworkResult<Object>> userRegister(@RequestBody @Valid User user){
-        return () -> RsHelper.success( userService.register(user));
+        return () -> RsHelper.success(userService.register(user));
     }
 }

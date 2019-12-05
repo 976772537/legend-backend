@@ -1,10 +1,9 @@
 package com.drp.sso.sso.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.CascadeType;
@@ -16,11 +15,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.List;
 
 /**
  * @author dongruipeng
- * @Descrpition
+ * @Descrpition 对数据库的操作都是通过UserDetails
  * @date 2019year 12month04day  11:27:59
  */
 @NoArgsConstructor
@@ -54,8 +54,12 @@ public class UserDetails {
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "role_id")})
     private List<Role> roles;
 
+    @JsonIgnore
+    @Transient
+    private boolean auth;//权限认证
+
     public boolean verifyUserAuth() {
-        return false;
+        return auth;
     }
 
 }
