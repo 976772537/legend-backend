@@ -30,11 +30,11 @@ public final class RsHelper<T> {
     private static int getErrorCode(Throwable throwable) {
         final Class<? extends Throwable> ex = throwable.getClass();
         if (ex == WrongCodeException.class) {
-            return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+            return HttpServletResponse.SC_INTERNAL_SERVER_ERROR; // 500
         } else if (ex == MyAccessException.class) {
-            return HttpServletResponse.SC_FORBIDDEN;
+            return HttpServletResponse.SC_FORBIDDEN; // 403
         }
-        return HttpServletResponse.SC_BAD_REQUEST;
+        return HttpServletResponse.SC_BAD_REQUEST; // 400
     }
 
     /**
