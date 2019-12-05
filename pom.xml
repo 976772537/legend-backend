@@ -17,6 +17,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>sso</module>
+        <module>common</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>

@@ -2,7 +2,6 @@ package com.drp.sso.sso.repository;
 
 import com.drp.sso.sso.domain.UserDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.query.Param;
 
 /**
  * @author dongruipeng

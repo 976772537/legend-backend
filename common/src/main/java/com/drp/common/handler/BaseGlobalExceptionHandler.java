@@ -1,6 +1,6 @@
-package com.drp.sso.sso.common.handler;
+package com.drp.common.handler;
 
-import com.drp.sso.sso.common.utils.RsHelper;
+import com.drp.common.utils.RsHelper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

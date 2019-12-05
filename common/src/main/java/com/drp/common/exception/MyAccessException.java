@@ -1,4 +1,4 @@
-package com.drp.sso.sso.common.exception;
+package com.drp.common.exception;
 
 /**
  * @author dongruipeng

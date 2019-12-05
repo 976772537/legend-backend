@@ -1,4 +1,4 @@
-package com.drp.sso.sso.bean;
+package com.drp.common.bean;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;

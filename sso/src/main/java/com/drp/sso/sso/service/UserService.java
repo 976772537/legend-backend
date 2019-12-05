@@ -1,7 +1,7 @@
 package com.drp.sso.sso.service;
 
 
-import com.drp.sso.sso.bean.User;
+import com.drp.common.bean.User;
 
 /**
  * @author dongruipeng

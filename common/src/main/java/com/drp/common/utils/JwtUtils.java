@@ -1,7 +1,7 @@
-package com.drp.sso.sso.common.utils;
+package com.drp.common.utils;
 
-import com.drp.sso.sso.bean.User;
-import com.drp.sso.sso.common.exception.MyAccessException;
+import com.drp.common.bean.User;
+import com.drp.common.exception.MyAccessException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

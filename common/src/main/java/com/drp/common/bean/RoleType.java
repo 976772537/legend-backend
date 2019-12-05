@@ -1,4 +1,4 @@
-package com.drp.sso.sso.domain;
+package com.drp.common.bean;
 
 /**
  * @author dongruipeng

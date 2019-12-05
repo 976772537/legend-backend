@@ -1,8 +1,8 @@
-package com.drp.sso.sso.common.utils;
+package com.drp.common.utils;
 
 
-import com.drp.sso.sso.common.exception.MyAccessException;
-import com.drp.sso.sso.common.exception.WrongCodeException;
+import com.drp.common.exception.MyAccessException;
+import com.drp.common.exception.WrongCodeException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.drp.sso.sso.common.utils;
+package com.drp.common.utils;
 
 import lombok.Getter;
 import lombok.Setter;

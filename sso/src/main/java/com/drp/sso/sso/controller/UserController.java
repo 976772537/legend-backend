@@ -1,10 +1,10 @@
 package com.drp.sso.sso.controller;
 
-import com.drp.sso.sso.bean.User;
-import com.drp.sso.sso.common.ActionUri;
-import com.drp.sso.sso.common.RootUri;
-import com.drp.sso.sso.common.utils.NetworkResult;
-import com.drp.sso.sso.common.utils.RsHelper;
+import com.drp.common.bean.User;
+import com.drp.common.ActionUri;
+import com.drp.common.RootUri;
+import com.drp.common.utils.NetworkResult;
+import com.drp.common.utils.RsHelper;
 import com.drp.sso.sso.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
