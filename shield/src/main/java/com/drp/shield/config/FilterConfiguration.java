@@ -1,5 +1,6 @@
 package com.drp.shield.config;
 
+import com.drp.shield.core.filter.NakedDomainFilter;
 import com.drp.shield.core.filter.SecurityFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -13,11 +14,20 @@ import org.springframework.core.Ordered;
  */
 @Configuration
 public class FilterConfiguration {
+
     @Bean
-    public FilterRegistrationBean<SecurityFilter> securityFilterFilterRegistrationBean(){
+    public FilterRegistrationBean<SecurityFilter> securityFilterFilterRegistrationBean() {
         FilterRegistrationBean<SecurityFilter> registrationBean =
                 new FilterRegistrationBean<>(new SecurityFilter());
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 80); // before NakedDomainFilter
+        return registrationBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean<NakedDomainFilter> nakedDomainFilterFilterRegistrationBean() {
+        FilterRegistrationBean<NakedDomainFilter> registrationBean =
+                new FilterRegistrationBean<>(new NakedDomainFilter());
+        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 90); // before ReverseProxyFilter
         return registrationBean;
     }
 }

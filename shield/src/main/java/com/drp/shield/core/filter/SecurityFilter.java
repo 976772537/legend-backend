@@ -65,7 +65,8 @@ public class SecurityFilter extends OncePerRequestFilter {
             }
 
             // HSTS - force SSL
-            response.setHeader("Strict-Transport-Security", "max-age=315360000; includeSubDomains; preload");
+            response.setHeader("Strict-Transport-Security",
+                    "max-age=315360000; includeSubDomains; preload");
             // only iframe by myself
             response.setHeader("X-Frame-Options", "SAMEORIGIN");
             // Cross-site scripting protection

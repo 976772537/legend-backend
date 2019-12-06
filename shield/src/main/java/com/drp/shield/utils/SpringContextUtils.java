@@ -23,8 +23,8 @@ public class SpringContextUtils implements ApplicationContextAware {
     }
 
     // 传入线程中
-    public static <T> T getBean(String beanName) {
-        return (T) context.getBean(beanName);
+    public static <T> T getBean(Class beanClass) {
+        return (T) context.getBean(beanClass);
     }
 
     // 国际化使用
@@ -37,7 +37,7 @@ public class SpringContextUtils implements ApplicationContextAware {
         return context.getEnvironment().getActiveProfiles()[0];
     }
 
-    public static boolean isDev(){
+    public static boolean isDev() {
         String env = context.getEnvironment().getActiveProfiles()[0];
         return env.equals("dev");
     }
