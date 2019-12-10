@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 @Component
 @PropertySource(value = {"classpath:common.properties"})
 public class EnvConfig {
-    @Value("${applciation.server-name}")
+    @Value("${server.name}")
     private String serverName;
+    @Value("${server.favicon}")
+    private String faviconPath;
 }

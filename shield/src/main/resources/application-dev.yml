@@ -1,0 +1,10 @@
+shield:
+  tracing:
+    enabled: true
+  mappings:
+    - name: sso
+      host: www.dongrp.club
+      destinations:
+        - localhost:8081
+      uris:
+        - /v1/user

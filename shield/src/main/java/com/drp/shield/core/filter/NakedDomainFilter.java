@@ -23,14 +23,14 @@ import static com.drp.shield.utils.SpringContextUtils.isDev;
 @Slf4j
 public class NakedDomainFilter extends OncePerRequestFilter {
 
-    private final ThreadLocal<EnvConfig> envLocal = new ThreadLocal<>();
+    private EnvConfig env;
     private static final String DEFAULT_SERVICE = "www";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain chain) throws ServletException, IOException {
-        final EnvConfig env = initEnv();
+        initEnv();
         // if you're hitting naked domain - go to www
         // e.g. donrp.club/foo?true=1 should redirect to www.donrp.club/foo?true=1
         if (env.getServerName().equals(request.getServerName())) {
@@ -39,6 +39,7 @@ public class NakedDomainFilter extends OncePerRequestFilter {
             if (!isDev()) {
                 scheme = "https";
             }
+
             try {
                 URI redirectUrl = new URI(scheme,
                         null,
@@ -50,15 +51,15 @@ public class NakedDomainFilter extends OncePerRequestFilter {
             } catch (URISyntaxException e) {
                 log.error("fail to build redirect url", e);
             }
+
         } else {
             chain.doFilter(request, response);
         }
     }
 
-    private EnvConfig initEnv() {
-        if (envLocal.get() == null) {
-            envLocal.set(getBean(EnvConfig.class));
+    private void initEnv() {
+        if (env == null) {
+            env = getBean(EnvConfig.class);
         }
-        return envLocal.get();
     }
 }

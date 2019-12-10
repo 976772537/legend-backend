@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * Sso =>> Authenticated user
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.drp"})
 public class SsoApplication {
 
     public static void main(String[] args) {
