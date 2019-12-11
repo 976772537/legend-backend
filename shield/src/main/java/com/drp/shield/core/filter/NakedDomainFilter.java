@@ -14,6 +14,7 @@ import java.net.URISyntaxException;
 
 import static com.drp.shield.utils.SpringContextUtils.getBean;
 import static com.drp.shield.utils.SpringContextUtils.isDev;
+import static okhttp3.internal.http.HttpMethod.requiresRequestBody;
 
 /**
  * @author dongruipeng
@@ -30,6 +31,11 @@ public class NakedDomainFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain chain) throws ServletException, IOException {
+        if (requiresRequestBody(request.getMethod())) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         initEnv();
         // if you're hitting naked domain - go to www
         // e.g. donrp.club/foo?true=1 should redirect to www.donrp.club/foo?true=1

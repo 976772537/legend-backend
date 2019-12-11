@@ -56,34 +56,34 @@ public class OkHttpUtils {
             if (response.isSuccessful()) {
                 return requireNonNull(response.body(), "response body is null").string();
             }
-            throw new WrongCodeException("okHttp3 get error code >> " + response.code());
+            throw new WrongCodeException("http get error code :" + response.code());
         } catch (Exception e) {
-            throw new WrongCodeException("okHttp3 get error >> " + e.getMessage());
+            throw new WrongCodeException("http get msg  :" + e.getMessage(), e);
         }
     }
 
     public String common(HttpMethod method,
-                                String url,
-                                Headers headers,
-                                RequestBody requestBody) {
+                         String url,
+                         Headers headers,
+                         RequestBody requestBody) {
 
         Request request = requestSelector(method, url, headers, requestBody);
         try (Response response = okHttpClient.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 return requireNonNull(response.body(), "response body is null").string();
             }
-            throw new WrongCodeException("okHttp3 " + method.name()
-                    + " error code>> " + response.code());
+            throw new WrongCodeException("http " + method.name()
+                    + " error code " + response.code());
         } catch (Exception e) {
-            throw new WrongCodeException("okHttp3 " + method.name()
-                    + " error >> " + e.getMessage(), e);
+            throw new WrongCodeException("http " + method.name()
+                    + " error msg " + e.getMessage(), e);
         }
     }
 
     private Request requestSelector(HttpMethod method,
-                                           String url,
-                                           Headers headers,
-                                           RequestBody requestBody) {
+                                    String url,
+                                    Headers headers,
+                                    RequestBody requestBody) {
         final Request.Builder requestUrl = new Request.Builder()
                 .url(url).headers(headers);
         if (method.matches("POST")) {

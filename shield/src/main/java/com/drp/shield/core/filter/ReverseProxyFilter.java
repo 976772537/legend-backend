@@ -1,5 +1,6 @@
 package com.drp.shield.core.filter;
 
+import cn.hutool.core.util.CharsetUtil;
 import com.drp.common.utils.OkHttpUtils;
 import com.drp.shield.config.MappingProperties;
 import com.drp.shield.config.ShieldProperties;
@@ -49,6 +50,7 @@ public class ReverseProxyFilter extends OncePerRequestFilter {
     private final ProxyingTraceInterceptor traceInterceptor;
     private final ShieldProperties shieldProperties;
     private final OkHttpUtils okHttpUtils;
+
     public ReverseProxyFilter(ProxyingTraceInterceptor trace,
                               ShieldProperties shieldProperties,
                               OkHttpUtils okHttpUtils) {
@@ -80,37 +82,51 @@ public class ReverseProxyFilter extends OncePerRequestFilter {
             responseWrong(response);
             return;
         }
-
+        //add forward heads
         addForwardHeaders(request, headers);
+
         final URI url = getUrl(request, destinations.get(0));
         byte[] body = RequestDataExtractor.extractBody(request);
-        String reponseBody = null;
+        String reponseBody;
         //common http
         if (body != null && headers.containsKey(CONTENT_TYPE)) {
             final List<String> contentTypes = headers.get(CONTENT_TYPE);
+            //get contentType
             if (contentTypes != null && contentTypes.size() > 0) {
-                final RequestBody requestBody = okHttpUtils.getRequestBody(contentTypes.get(0), body);
+                //verify url
                 if (url != null) {
+                    final RequestBody requestBody =
+                            okHttpUtils.getRequestBody(contentTypes.get(0), body);
                     final Headers okHeaders = Headers.of(headers.toSingleValueMap());
-                    reponseBody = okHttpUtils.common(method, url.toString(), okHeaders, requestBody);
+                    reponseBody =
+                            okHttpUtils.common(method, url.toString(), okHeaders, requestBody);
+                    writeResponseBody(response, reponseBody);
+                    return;
                 } else {
                     responseWrong(response);
                 }
+
             } else {
                 throw new ShieldNetException("Unsupport Request Body");
             }
+
         }
-        if (body == null) {
-            final Headers okHeaders = Headers.of(headers.toSingleValueMap());
+        //get http
+        if (body == null || body.length == 0) {
             if (url != null) {
+                final Headers okHeaders = Headers.of(headers.toSingleValueMap());
                 reponseBody = okHttpUtils.get(url.toString(), okHeaders);
+                writeResponseBody(response, reponseBody);
             } else {
                 throw new ShieldNetException("get url is null");
             }
         }
+    }
 
+    private void writeResponseBody(HttpServletResponse response, String reponseBody) throws IOException {
         if (reponseBody != null) {
-            response.getWriter().println(reponseBody);
+            response.setCharacterEncoding(CharsetUtil.UTF_8);
+            response.getWriter().write(reponseBody);
         } else {
             throw new ShieldNetException("reponseBody is null");
         }
