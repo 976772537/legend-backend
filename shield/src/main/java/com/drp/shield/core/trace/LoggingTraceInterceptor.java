@@ -5,6 +5,7 @@ import com.drp.shield.core.http.IncomingRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.net.URI;
 import java.util.HashMap;
 
 /**
@@ -30,6 +31,16 @@ public class LoggingTraceInterceptor implements TraceInterceptor {
             put("type", "No mapping found for incoming HTTP request");
             put("traceId", traceId);
             put("request", request);
+        }}));
+    }
+
+    @Override
+    public void onForwardStart(String traceId, String url, int len) {
+        log.info(JSONUtil.toJsonStr(new HashMap<String, Object>() {{
+            put("type", "Forwarding HTTP request started");
+            put("traceId", traceId);
+            put("url", url);
+            put("bodySize", len);
         }}));
     }
 }

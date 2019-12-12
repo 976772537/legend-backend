@@ -36,7 +36,7 @@ public class OkHttpUtils {
     }
 
     /**
-     * http get
+     * http noBodyRequest
      *
      * @param queries url?xxxx=???&xxx=???
      */
@@ -45,7 +45,7 @@ public class OkHttpUtils {
         return getHttp(url, headers);
     }
 
-    public String get(String url, Headers headers) {
+    public String noBodyRequest(String url, Headers headers) {
         return getHttp(url, headers);
     }
 
@@ -56,16 +56,16 @@ public class OkHttpUtils {
             if (response.isSuccessful()) {
                 return requireNonNull(response.body(), "response body is null").string();
             }
-            throw new WrongCodeException("http get error code :" + response.code());
+            throw new WrongCodeException("http noBodyRequest error code :" + response.code());
         } catch (Exception e) {
-            throw new WrongCodeException("http get msg  :" + e.getMessage(), e);
+            throw new WrongCodeException("http noBodyRequest msg  :" + e.getMessage(), e);
         }
     }
 
-    public String common(HttpMethod method,
-                         String url,
-                         Headers headers,
-                         RequestBody requestBody) {
+    public String bodyRequest(HttpMethod method,
+                              String url,
+                              Headers headers,
+                              RequestBody requestBody) {
 
         Request request = requestSelector(method, url, headers, requestBody);
         try (Response response = okHttpClient.newCall(request).execute()) {

@@ -8,6 +8,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
+import java.net.URI;
+
 /**
  * @author dongruipeng
  * @Descrpition
@@ -55,6 +57,12 @@ public class ProxyingTraceInterceptor {
             final IncomingRequest received =
                     new IncomingRequest(method, originHost, originUri, headers);
             traceInterceptor.onNoMappingFound(traceId, received);
+        });
+    }
+
+    public void onForwardStart(String traceId, String url, int bodyLen) {
+        runIfTracingIsEnabled(() -> {
+            traceInterceptor.onForwardStart(traceId, url, bodyLen);
         });
     }
 

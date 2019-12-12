@@ -21,7 +21,7 @@ public final class JwtUtils {
     private static final String TOKEN_PREFIX = "Bearer";
 
     public static String generateJwtToken(String username) {
-        //get claims
+        //noBodyRequest claims
         final HashMap<String, Object> claims = new HashMap<String, Object>(){{
             put(CLAIM_KEY_USERNAME, username);
             put(CLAIM_KEY_CREATED, System.currentTimeMillis());
@@ -29,7 +29,7 @@ public final class JwtUtils {
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setExpiration(getExpirationDateFromToken())
+                .setExpiration(getExpirationDate())
                 .signWith(SignatureAlgorithm.HS512, SECRET)
                 .compact();
     }
@@ -40,13 +40,18 @@ public final class JwtUtils {
         return username.equals(user.getUsername()) && !isTokenExpired(token);
     }
 
-    private static boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken();
+    public static boolean isTokenExpired(String token) {
+        final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
 
-    private static Date getExpirationDateFromToken() {
+    private static Date getExpirationDate() {
         return new Date(System.currentTimeMillis() + EXPIRATION_TIME);
+    }
+
+    private static Date getExpirationDateFromToken(String token) {
+        final Claims claims = getClaimsFromToken(token);
+        return claims.getExpiration();
     }
 
     private static String getUsernameFromToken(String token) {
@@ -66,7 +71,7 @@ public final class JwtUtils {
         return getUsernameFromToken(token);
     }
 
-    private static String getTokenFromHeader(String authHeader) {
+    public static String getTokenFromHeader(String authHeader) {
         if (authHeader != null && authHeader.startsWith(TOKEN_PREFIX)) {
             return authHeader.substring(TOKEN_PREFIX.length());
         }

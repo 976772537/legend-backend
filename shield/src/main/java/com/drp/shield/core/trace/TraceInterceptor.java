@@ -2,6 +2,8 @@ package com.drp.shield.core.trace;
 
 import com.drp.shield.core.http.IncomingRequest;
 
+import java.net.URI;
+
 /**
  * @author dongruipeng
  * @Descrpition
@@ -12,4 +14,6 @@ public interface TraceInterceptor {
     void onRequestReceived(String traceId, IncomingRequest received);
 
     void onNoMappingFound(String traceId, IncomingRequest request);
+
+    void onForwardStart(String traceId, String url, int bodyLen);
 }

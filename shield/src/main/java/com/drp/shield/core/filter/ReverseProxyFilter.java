@@ -1,16 +1,14 @@
 package com.drp.shield.core.filter;
 
 import cn.hutool.core.util.CharsetUtil;
-import com.drp.common.utils.OkHttpUtils;
 import com.drp.shield.config.MappingProperties;
 import com.drp.shield.config.ShieldProperties;
 import com.drp.shield.core.http.RequestDataExtractor;
+import com.drp.shield.core.http.RequestForwarder;
 import com.drp.shield.core.trace.ProxyingTraceInterceptor;
 import com.drp.shield.exception.ShieldNetException;
 import com.drp.shield.exception.WrongConfigureException;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.Headers;
-import okhttp3.RequestBody;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -25,13 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static cn.hutool.core.util.ObjectUtil.isNotNull;
+import static cn.hutool.core.util.ObjectUtil.isNull;
 import static com.drp.shield.core.http.RequestDataExtractor.extractHost;
 import static com.drp.shield.core.http.RequestDataExtractor.extractHttpHeaders;
 import static com.drp.shield.core.http.RequestDataExtractor.extractHttpMethod;
 import static com.drp.shield.core.http.RequestDataExtractor.extractUri;
 import static com.drp.shield.core.http.RequestDataExtractor.getUrl;
 import static java.lang.String.valueOf;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
@@ -49,21 +48,21 @@ public class ReverseProxyFilter extends OncePerRequestFilter {
 
     private final ProxyingTraceInterceptor traceInterceptor;
     private final ShieldProperties shieldProperties;
-    private final OkHttpUtils okHttpUtils;
+    private final RequestForwarder requestForwarder;
 
     public ReverseProxyFilter(ProxyingTraceInterceptor trace,
                               ShieldProperties shieldProperties,
-                              OkHttpUtils okHttpUtils) {
+                              RequestForwarder requestForwarder) {
         this.traceInterceptor = trace;
         this.shieldProperties = shieldProperties;
-        this.okHttpUtils = okHttpUtils;
+        this.requestForwarder = requestForwarder;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain chain) throws ServletException, IOException {
-        //get request detials
+        //noBodyRequest request detials
         String originUri = extractUri(request);
         String originHost = extractHost(request);
         final HttpHeaders headers = extractHttpHeaders(request);
@@ -76,55 +75,34 @@ public class ReverseProxyFilter extends OncePerRequestFilter {
         final List<String> destinations = resolveMappings(originHost,
                 originUri, shieldProperties.getMappings());
 
-        if (destinations == null) {
+        if (isNull(destinations)) {
             //worng
             traceInterceptor.noMappingFound(traceId, method, originHost, originUri, headers);
-            responseWrong(response);
+            responseWrong(response, "Unsupported Domain");
             return;
         }
         //add forward heads
         addForwardHeaders(request, headers);
 
         final URI url = getUrl(request, destinations.get(0));
+        if (isNull(url)) {
+            responseWrong(response, "Invaild Url");
+            return;
+        }
         byte[] body = RequestDataExtractor.extractBody(request);
-        String reponseBody;
-        //common http
-        if (body != null && headers.containsKey(CONTENT_TYPE)) {
-            final List<String> contentTypes = headers.get(CONTENT_TYPE);
-            //get contentType
-            if (contentTypes != null && contentTypes.size() > 0) {
-                //verify url
-                if (url != null) {
-                    final RequestBody requestBody =
-                            okHttpUtils.getRequestBody(contentTypes.get(0), body);
-                    final Headers okHeaders = Headers.of(headers.toSingleValueMap());
-                    reponseBody =
-                            okHttpUtils.common(method, url.toString(), okHeaders, requestBody);
-                    writeResponseBody(response, reponseBody);
-                    return;
-                } else {
-                    responseWrong(response);
-                }
 
-            } else {
-                throw new ShieldNetException("Unsupport Request Body");
-            }
-
+        String responseBody =
+                requestForwarder.forwarderHttpRequest(traceId,headers, method, url, body);
+        if (isNull(responseBody)) {
+            responseWrong(response, "Unsupport Request");
+            return;
         }
-        //get http
-        if (body == null || body.length == 0) {
-            if (url != null) {
-                final Headers okHeaders = Headers.of(headers.toSingleValueMap());
-                reponseBody = okHttpUtils.get(url.toString(), okHeaders);
-                writeResponseBody(response, reponseBody);
-            } else {
-                throw new ShieldNetException("get url is null");
-            }
-        }
+        writeResponseBody(response, responseBody);
     }
 
+
     private void writeResponseBody(HttpServletResponse response, String reponseBody) throws IOException {
-        if (reponseBody != null) {
+        if (isNotNull(reponseBody )) {
             response.setCharacterEncoding(CharsetUtil.UTF_8);
             response.getWriter().write(reponseBody);
         } else {
@@ -132,9 +110,9 @@ public class ReverseProxyFilter extends OncePerRequestFilter {
         }
     }
 
-    private void responseWrong(HttpServletResponse response) throws IOException {
+    private void responseWrong(HttpServletResponse response, String msg) throws IOException {
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        response.getWriter().println("Unsupported domain");
+        response.getWriter().println(msg);
     }
 
     private void addForwardHeaders(HttpServletRequest request, HttpHeaders headers) {

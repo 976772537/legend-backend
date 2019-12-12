@@ -1,11 +1,11 @@
 package com.drp.shield.config;
 
-import com.drp.common.utils.OkHttpUtils;
 import com.drp.shield.core.filter.FaviconFilter;
 import com.drp.shield.core.filter.HealthCheckFilter;
 import com.drp.shield.core.filter.NakedDomainFilter;
 import com.drp.shield.core.filter.ReverseProxyFilter;
 import com.drp.shield.core.filter.SecurityFilter;
+import com.drp.shield.core.http.RequestForwarder;
 import com.drp.shield.core.trace.ProxyingTraceInterceptor;
 import com.drp.shield.view.AssetLoader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +25,17 @@ public class FilterConfiguration {
     private final AssetLoader assetLoader;
     private final ProxyingTraceInterceptor interceptor;
     private final ShieldProperties shieldProperties;
-    private OkHttpUtils okHttpUtils;
+    private final RequestForwarder requestForwarder;
+
     @Autowired
     public FilterConfiguration(AssetLoader assetLoader,
                                ProxyingTraceInterceptor interceptor,
                                ShieldProperties shieldProperties,
-                               OkHttpUtils okHttpUtils) {
+                               RequestForwarder requestForwarder) {
         this.assetLoader = assetLoader;
         this.interceptor = interceptor;
         this.shieldProperties = shieldProperties;
-        this.okHttpUtils = okHttpUtils;
+        this.requestForwarder = requestForwarder;
     }
 
     @Bean
@@ -72,7 +73,11 @@ public class FilterConfiguration {
     @Bean
     public FilterRegistrationBean<ReverseProxyFilter> reverseProxyFilterFilterRegistrationBean() {
         final FilterRegistrationBean<ReverseProxyFilter> registrationBean =
-                new FilterRegistrationBean<>(new ReverseProxyFilter(interceptor, shieldProperties, okHttpUtils));
+                new FilterRegistrationBean<>(new ReverseProxyFilter(
+                        interceptor,
+                        shieldProperties,
+                        requestForwarder
+                ));
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 100);
         return registrationBean;
     }

@@ -1,7 +1,7 @@
 package com.drp.shield.view;
 
 import cn.hutool.core.io.IoUtil;
-import com.drp.shield.config.EnvConfig;
+import com.drp.shield.config.SecurityConfig;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -19,13 +19,13 @@ import java.io.InputStream;
 @Component
 public class AssetLoader {
 
-    private final EnvConfig env;
+    private final SecurityConfig env;
 
     @Getter
     private byte[] faviconBytes;
 
     @Autowired
-    public AssetLoader(EnvConfig env) {
+    public AssetLoader(SecurityConfig env) {
         this.env = env;
     }
 

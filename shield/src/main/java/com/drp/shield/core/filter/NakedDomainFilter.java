@@ -1,6 +1,6 @@
 package com.drp.shield.core.filter;
 
-import com.drp.shield.config.EnvConfig;
+import com.drp.shield.config.SecurityConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -24,7 +24,7 @@ import static okhttp3.internal.http.HttpMethod.requiresRequestBody;
 @Slf4j
 public class NakedDomainFilter extends OncePerRequestFilter {
 
-    private EnvConfig env;
+    private SecurityConfig env;
     private static final String DEFAULT_SERVICE = "www";
 
     @Override
@@ -65,7 +65,7 @@ public class NakedDomainFilter extends OncePerRequestFilter {
 
     private void initEnv() {
         if (env == null) {
-            env = getBean(EnvConfig.class);
+            env = getBean(SecurityConfig.class);
         }
     }
 }
