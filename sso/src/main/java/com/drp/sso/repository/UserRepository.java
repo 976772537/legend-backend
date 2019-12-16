@@ -9,12 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @date 2019year 12month04day  11:24:45
  */
 public interface UserRepository extends JpaRepository<UserDetails, String> {
-
-    int countByNickname(String nickName);
-
     int countByUsername(String userName);
 
-    UserDetails findAllByUserId(String uid);
-
-    UserDetails findAllByUsername(String username);
+    UserDetails findAllByUsernameAndPassword(String username, String password);
 }

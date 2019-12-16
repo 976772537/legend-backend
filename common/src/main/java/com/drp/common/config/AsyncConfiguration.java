@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.context.request.async.TimeoutCallableProcessingInterceptor;
+import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.concurrent.Executor;
@@ -17,8 +19,21 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableAsync
 @Configuration
 public class AsyncConfiguration implements WebMvcConfigurer {
+
+    @Override
+    public void configureAsyncSupport(final AsyncSupportConfigurer configurer) {
+        configurer.setDefaultTimeout(60 * 1000L);
+        configurer.registerCallableInterceptors(timeoutInterceptor());
+        configurer.setTaskExecutor(asyncServiceExecutor());
+    }
+
     @Bean
-    public Executor asyncServiceExecutor() {
+    public TimeoutCallableProcessingInterceptor timeoutInterceptor() {
+        return new TimeoutCallableProcessingInterceptor();
+    }
+
+    @Bean
+    public ThreadPoolTaskExecutor asyncServiceExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         final int processors = Runtime.getRuntime().availableProcessors();
 

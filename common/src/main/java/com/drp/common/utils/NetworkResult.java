@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 public final class NetworkResult<T> {
 
     public static final String BAD_REQUEST_ERROR_MSG = "Bad request!";
+    public static final String SUCCESS_MSG = "Success!";
 
     @Getter
     @Setter
@@ -31,6 +32,7 @@ public final class NetworkResult<T> {
     public NetworkResult(T data) {
         code = HttpServletResponse.SC_OK;
         this.data = data;
+        this.msg = SUCCESS_MSG;
     }
 
     public NetworkResult(int code, String msg) {

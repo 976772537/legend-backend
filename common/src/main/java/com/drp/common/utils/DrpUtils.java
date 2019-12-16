@@ -1,5 +1,8 @@
 package com.drp.common.utils;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.util.CollectionUtils;
+
 import java.util.List;
 
 /**
@@ -9,9 +12,9 @@ import java.util.List;
  */
 public class DrpUtils {
 
-    public static<T> T isNotNull(T obj, String msg) {
+    public static <T> T isNotNull(T obj, String msg) {
         if (obj == null) {
-            throw new NullPointerException(msg + "=> No corresponding data is obtained");
+            throw new NullPointerException(msg + " => No corresponding data is obtained");
         } else {
             return obj;
         }
@@ -23,9 +26,28 @@ public class DrpUtils {
 
     private static List arrayIsEmpty(List arr, String msg) {
         isNotNull(arr, msg);
-        if(arr.size() == 0) {
-            throw new ArrayIndexOutOfBoundsException(msg + "=> The array length is empty");
+        if (arr.size() == 0) {
+            throw new ArrayIndexOutOfBoundsException(msg + " => The array length is empty");
         }
         return arr;
+    }
+
+    public static String getIpAddr(HttpHeaders headers) {
+        String ip = getHeader("x-forwarded-for", headers);
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = getHeader("Proxy-Client-IP", headers);
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = getHeader("WL-Proxy-Client-IP", headers);
+        }
+        if (ip != null && !ip.isEmpty() && ip.indexOf(",") > 0) {
+            ip = ip.split(",")[0];
+        }
+        return ip;
+    }
+
+    public static String getHeader(String name, HttpHeaders headers) {
+        List<String> value = headers.get(name);
+        return CollectionUtils.isEmpty(value) ? null : value.get(0);
     }
 }

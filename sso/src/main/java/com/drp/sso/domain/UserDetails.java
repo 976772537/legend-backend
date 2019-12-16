@@ -37,7 +37,7 @@ public class UserDetails {
     private String username;
     private String password;
     private String nickname;
-    private char gender;
+    private String gender;
     private int level;
     private long exp;
     private String email;

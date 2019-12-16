@@ -26,7 +26,8 @@ public class User implements Serializable {
     private String password;
     @NotBlank(message = "昵称不能为空")
     private String nickname;
-    private char gender;
+    @NotBlank(message = "性别不能为空")
+    private String gender;
     @Min(value = 0)
     private int level;
     @Min(value = 0)

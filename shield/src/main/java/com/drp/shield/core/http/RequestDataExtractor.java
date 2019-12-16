@@ -13,6 +13,7 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author dongruipeng
@@ -25,7 +26,7 @@ public class RequestDataExtractor {
         return request.getRequestURI();
     }
 
-    private static String getQuery(HttpServletRequest request) {
+    public static String getQuery(HttpServletRequest request) {
         return request.getQueryString();
     }
 
@@ -49,14 +50,21 @@ public class RequestDataExtractor {
     }
 
     public static URI getUrl(HttpServletRequest request, String destinations) {
+        return getUrl(request.getScheme(),
+                request.getRequestURI(),
+                destinations,
+                getQuery(request));
+    }
+
+    public static URI getUrl(String scheme, String url, String destinations, String queryStr) {
         final String[] des = destinations.split(":");
         try {
-            return new URI(request.getScheme(),
+            return new URI(scheme,
                     null,
                     des[0],
                     Integer.parseInt(des[1]),
-                    request.getRequestURI(),
-                    getQuery(request), null);
+                    url,
+                    queryStr, null);
         } catch (URISyntaxException e) {
             log.error("Fail to build redirect url", e);
             return null;
@@ -70,5 +78,10 @@ public class RequestDataExtractor {
             throw new ShieldIOException("Error extracting body of HTTP request with URI: "
                     + extractUri(request), e);
         }
+    }
+
+    public static String getLoadBalance(List<String> destinations) {
+        final Random random = new Random();
+        return destinations.get(random.nextInt(destinations.size()));
     }
 }

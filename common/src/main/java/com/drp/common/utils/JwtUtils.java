@@ -54,7 +54,7 @@ public final class JwtUtils {
         return claims.getExpiration();
     }
 
-    private static String getUsernameFromToken(String token) {
+    public static String getUsernameFromToken(String token) {
         final Claims claims = getClaimsFromToken(token);
         return claims.getSubject();//sub
     }

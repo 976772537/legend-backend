@@ -1,15 +1,12 @@
 package com.drp.shield.config;
 
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.ArrayUtil;
-import lombok.Data;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author dongruipeng
@@ -25,6 +22,6 @@ public class SecurityConfig {
     @Value("${server.favicon}")
     private String faviconPath;
     @Value("${server.permit-paths}")
-    private List<String> permitPaths;
+    private Set<String> permitPaths;
 
 }

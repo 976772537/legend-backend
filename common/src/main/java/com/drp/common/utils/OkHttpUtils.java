@@ -53,10 +53,7 @@ public class OkHttpUtils {
         Request request = new Request.Builder().url(url).headers(headers).build();
 
         try (Response response = okHttpClient.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                return requireNonNull(response.body(), "response body is null").string();
-            }
-            throw new WrongCodeException("http noBodyRequest error code :" + response.code());
+            return requireNonNull(response.body(), "response body is null").string();
         } catch (Exception e) {
             throw new WrongCodeException("http noBodyRequest msg  :" + e.getMessage(), e);
         }
@@ -69,11 +66,7 @@ public class OkHttpUtils {
 
         Request request = requestSelector(method, url, headers, requestBody);
         try (Response response = okHttpClient.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                return requireNonNull(response.body(), "response body is null").string();
-            }
-            throw new WrongCodeException("http " + method.name()
-                    + " error code " + response.code());
+            return requireNonNull(response.body(), "response body is null").string();
         } catch (Exception e) {
             throw new WrongCodeException("http " + method.name()
                     + " error msg " + e.getMessage(), e);

@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static cn.hutool.core.util.ObjectUtil.isNotNull;
@@ -29,6 +30,7 @@ import static com.drp.shield.core.http.RequestDataExtractor.extractHost;
 import static com.drp.shield.core.http.RequestDataExtractor.extractHttpHeaders;
 import static com.drp.shield.core.http.RequestDataExtractor.extractHttpMethod;
 import static com.drp.shield.core.http.RequestDataExtractor.extractUri;
+import static com.drp.shield.core.http.RequestDataExtractor.getLoadBalance;
 import static com.drp.shield.core.http.RequestDataExtractor.getUrl;
 import static java.lang.String.valueOf;
 import static org.springframework.util.CollectionUtils.isEmpty;
@@ -84,7 +86,7 @@ public class ReverseProxyFilter extends OncePerRequestFilter {
         //add forward heads
         addForwardHeaders(request, headers);
 
-        final URI url = getUrl(request, destinations.get(0));
+        final URI url = getUrl(request, getLoadBalance(destinations));
         if (isNull(url)) {
             responseWrong(response, "Invaild Url");
             return;
@@ -92,17 +94,13 @@ public class ReverseProxyFilter extends OncePerRequestFilter {
         byte[] body = RequestDataExtractor.extractBody(request);
 
         String responseBody =
-                requestForwarder.forwarderHttpRequest(traceId,headers, method, url, body);
-        if (isNull(responseBody)) {
-            responseWrong(response, "Unsupport Request");
-            return;
-        }
+                requestForwarder.forwarderHttpRequest(traceId, headers, method, url, body);
         writeResponseBody(response, responseBody);
     }
 
 
     private void writeResponseBody(HttpServletResponse response, String reponseBody) throws IOException {
-        if (isNotNull(reponseBody )) {
+        if (isNotNull(reponseBody)) {
             response.setCharacterEncoding(CharsetUtil.UTF_8);
             response.getWriter().write(reponseBody);
         } else {

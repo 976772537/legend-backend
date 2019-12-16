@@ -8,7 +8,7 @@ CREATE TABLE users
     username          VARCHAR(50)  NOT NULL UNIQUE,
     password          VARCHAR(200) NOT NULL,
     nickname          VARCHAR(50)  NOT NULL UNIQUE,
-    gender            CHAR         NOT NULL,
+    gender            VARCHAR(5)   NOT NULL,
     level             INT          NOT NULL DEFAULT 0,
     exp               BIGINT       NOT NULL DEFAULT 0,
     head_image        TEXT         NOT NULL,

@@ -13,4 +13,10 @@ public interface UserService {
      * USER register
      */
     User register(User user);
+
+    User login(String username, String password, String validCode);
+
+    String generateValidCode(String username);
+
+    int authToken(String token);
 }
