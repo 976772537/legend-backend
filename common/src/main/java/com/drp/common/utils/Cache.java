@@ -11,18 +11,20 @@ import java.util.HashMap;
  */
 //TODO temp ==> redis
 public class Cache {
-    private static HashMap<String, String> codeMap = new HashMap<>();
+    private static final HashMap<String, String> codeMap = new HashMap<>();
 
     public static boolean verifyCode(String key, String vlaue) {
-        if (!codeMap.containsKey(key)) {
-            return false;
-        }
+        synchronized (codeMap) {
+            if (!codeMap.containsKey(key)) {
+                return false;
+            }
 
-        final boolean flag = new MathGenerator().verify(codeMap.get(key), vlaue);
-        if (flag) {
-            codeMap.remove(key);
+            final boolean flag = new MathGenerator().verify(codeMap.get(key), vlaue);
+            if (flag) {
+                codeMap.remove(key);
+            }
+            return flag;
         }
-        return flag;
     }
 
     public static HashMap<String, String> getCodeMap() {

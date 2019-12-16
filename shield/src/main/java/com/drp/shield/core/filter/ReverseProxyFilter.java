@@ -3,6 +3,7 @@ package com.drp.shield.core.filter;
 import cn.hutool.core.util.CharsetUtil;
 import com.drp.shield.config.MappingProperties;
 import com.drp.shield.config.ShieldProperties;
+import com.drp.shield.core.http.LoadBalance;
 import com.drp.shield.core.http.RequestDataExtractor;
 import com.drp.shield.core.http.RequestForwarder;
 import com.drp.shield.core.trace.ProxyingTraceInterceptor;
@@ -21,7 +22,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static cn.hutool.core.util.ObjectUtil.isNotNull;
@@ -30,7 +30,6 @@ import static com.drp.shield.core.http.RequestDataExtractor.extractHost;
 import static com.drp.shield.core.http.RequestDataExtractor.extractHttpHeaders;
 import static com.drp.shield.core.http.RequestDataExtractor.extractHttpMethod;
 import static com.drp.shield.core.http.RequestDataExtractor.extractUri;
-import static com.drp.shield.core.http.RequestDataExtractor.getLoadBalance;
 import static com.drp.shield.core.http.RequestDataExtractor.getUrl;
 import static java.lang.String.valueOf;
 import static org.springframework.util.CollectionUtils.isEmpty;
@@ -86,7 +85,7 @@ public class ReverseProxyFilter extends OncePerRequestFilter {
         //add forward heads
         addForwardHeaders(request, headers);
 
-        final URI url = getUrl(request, getLoadBalance(destinations));
+        final URI url = getUrl(request, LoadBalance.average(destinations));
         if (isNull(url)) {
             responseWrong(response, "Invaild Url");
             return;

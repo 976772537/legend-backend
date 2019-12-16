@@ -28,7 +28,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static cn.hutool.core.util.ObjectUtil.isNotNull;
-import static com.drp.shield.core.http.RequestDataExtractor.getLoadBalance;
 import static com.drp.shield.core.http.RequestDataExtractor.getUrl;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 
@@ -115,7 +114,7 @@ public class RequestForwarder {
         }
 
         final List<MappingProperties> proList = getSsoProperties();
-        final String destinations = getLoadBalance(proList.get(0).getDestinations());
+        final String destinations = LoadBalance.average(proList.get(0).getDestinations());
 
         URI ssoUrl = getUrl("http", "/" + RootUri.USER + ActionUri.AUTH_TOKEN,
                 destinations, "token=" + auths.get(0));

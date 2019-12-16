@@ -79,9 +79,4 @@ public class RequestDataExtractor {
                     + extractUri(request), e);
         }
     }
-
-    public static String getLoadBalance(List<String> destinations) {
-        final Random random = new Random();
-        return destinations.get(random.nextInt(destinations.size()));
-    }
 }
