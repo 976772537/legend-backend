@@ -2,6 +2,9 @@ package com.drp.sso.service;
 
 
 import com.drp.common.bean.User;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * @author dongruipeng
@@ -19,4 +22,8 @@ public interface UserService {
     String generateValidCode(String username);
 
     int authToken(String token);
+
+    String changePassword(String token, String oldPassword, String newPassword);
+
+    String changeHeadImage(MultipartFile headImage, String token) throws IOException;
 }

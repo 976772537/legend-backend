@@ -1,5 +1,6 @@
 package com.drp.common.bean;
 
+import com.drp.common.utils.DrpUtils;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,5 +47,9 @@ public class User implements Serializable {
     public User resetPassword() {
         this.password = null;
         return this;
+    }
+
+    public void setHeadImage(String headImage) {
+        this.headImage = DrpUtils.fullFilePath(headImage);
     }
 }

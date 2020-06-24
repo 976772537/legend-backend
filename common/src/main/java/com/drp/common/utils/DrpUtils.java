@@ -1,8 +1,16 @@
 package com.drp.common.utils;
 
+import cn.hutool.core.io.FileTypeUtil;
+import com.drp.common.exception.MyAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -49,5 +57,30 @@ public class DrpUtils {
     public static String getHeader(String name, HttpHeaders headers) {
         List<String> value = headers.get(name);
         return CollectionUtils.isEmpty(value) ? null : value.get(0);
+    }
+
+    public static String verifyImageType(InputStream inputStream) {
+        final String type = FileTypeUtil.getType(inputStream);
+        if (!type.equals("jpg") && !type.equals("png")) {
+            throw new MyAccessException("wrong file type");
+        }
+        return type;
+    }
+
+
+    public static String fullFilePath(String headImage) {
+        //TODO schema:// + domain + headImage
+        return headImage;
+    }
+
+    public static void transMultipartFileTo(MultipartFile multipartFile,
+                                            String filename,
+                                            String filePath) throws IOException {
+        final File file = new File(filePath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        final Path path = Paths.get(filePath, filename);
+        multipartFile.transferTo(path);
     }
 }

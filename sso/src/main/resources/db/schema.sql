@@ -13,8 +13,8 @@ CREATE TABLE users
     exp               BIGINT       NOT NULL DEFAULT 0,
     head_image        TEXT         NOT NULL,
     email             varchar(20)  NOT NULL,
-    create_time_in_ms BIGINT       NOT NULL,
-    update_time_in_ms BIGINT       NOT NULL
+    create_time_in_ms TIMESTAMP    NULL     DEFAULT CURRENT_TIMESTAMP(),
+    update_time_in_ms TIMESTAMP    NULL     DEFAULT CURRENT_TIMESTAMP()
 );
 
 CREATE TABLE roles

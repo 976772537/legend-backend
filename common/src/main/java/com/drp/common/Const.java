@@ -7,4 +7,5 @@ package com.drp.common;
  */
 public class Const {
     public static final String USER_SSO_SERVER = "sso";
+    public static final String HEAD_IMAGE_PATH = "/incoming/static/image/headImage";
 }

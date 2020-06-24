@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,6 +18,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -44,9 +47,11 @@ public class UserDetails {
     @Column(name = "head_image")
     private String headImage;
     @Column(name = "create_time_in_ms")
-    private long createTimeInMs;
+    @CreationTimestamp
+    private Timestamp createTimeInMs;
     @Column(name = "update_time_in_ms")
-    private long updateTimeInMs;
+    @UpdateTimestamp
+    private Timestamp updateTimeInMs;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "users_roles_rela",
@@ -56,7 +61,7 @@ public class UserDetails {
 
     @JsonIgnore
     @Transient
-    private boolean auth;//权限认证
+    private boolean auth = false;//权限认证
 
     public boolean verifyUserAuth() {
         return auth;

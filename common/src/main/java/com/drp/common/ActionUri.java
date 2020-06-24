@@ -10,4 +10,6 @@ public class ActionUri {
     public static final String LOGIN = "/login";
     public static final String VALID_CODE = "/validCode";
     public static final String AUTH_TOKEN = "/authToken";
+    public static final String CHANGE_PASSWORD = "/changePassword";
+    public static final String CHANGE_HEADIMAGE = "/changeHeadImage";
 }
